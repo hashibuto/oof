@@ -46,14 +46,18 @@ func Wrapf(fmtString string, args ...any) error {
 		switch t := arg.(type) {
 		case error:
 			if err != nil {
-				panic("Wrapf cannot contain more than one error type argument")
+				err = fmt.Errorf("Wrapf: Can only wrap a single error: %w", err)
 			}
 			errIdx = i
 			err = t
 		}
 	}
+	if err == nil {
+		err = fmt.Errorf("Wrapf: No error provided in arguments")
+	}
+
 	if !strings.Contains(fmtString, "%w") {
-		panic("Wrapf format string must contain an error wrap type formatter")
+		err = fmt.Errorf("Wrapf: No wrapping format specifier provided in format string: %w", err)
 	}
 
 	switch {
