@@ -17,7 +17,7 @@ func LibCodeNested() error {
 func ApplicationLevelCaller() error {
 	err := LibCodeNested()
 	if err != nil {
-		return Wrap(err)
+		return Trace(err)
 	}
 
 	return nil
@@ -32,13 +32,13 @@ func LibCodeNested1() error {
 func ApplicationLevelCaller1() error {
 	err := LibCodeNested()
 	if err != nil {
-		return Wrapf("Hello, this is my error: %w", err)
+		return Tracef("Hello, this is my error: %w", err)
 	}
 
 	return nil
 }
 
-func TestWrap(t *testing.T) {
+func TestTrace(t *testing.T) {
 	err := ApplicationLevelCaller()
 	if !errors.Is(err, OofErrorInstance) {
 		t.Errorf("Expecting an oof error instance")
@@ -52,7 +52,7 @@ func TestWrap(t *testing.T) {
 	}
 }
 
-func TestWrapf(t *testing.T) {
+func TestTracef(t *testing.T) {
 	err := ApplicationLevelCaller1()
 	if !errors.Is(err, OofErrorInstance) {
 		t.Errorf("Expecting an oof error instance")

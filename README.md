@@ -12,15 +12,15 @@ Wrap an error and include a stack trace
 ```
 err := method(xyz)
 if err != nil {
-    return oof.Wrap(err)
+    return oof.Trace(err)
 }
 ```
 
-Wrap an error with an annotation
+Wrap an error and include a stack trace, with an annotation
 ```
 err := method(xyz)
 if err != nil {
-    return oof.Wrapf("This is my error: %w", err)
+    return oof.Tracef("This is my error: %w", err)
 }
 ```
 
@@ -36,11 +36,11 @@ origErr := oof.GetOrigError(err)
 goroutine 7 [running]:
 runtime/debug.Stack()
         /usr/local/go/src/runtime/debug/stack.go:24 +0x65
-github.com/hashibuto/oof.Wrapf({0x52e6b9, 0x1b}, {0xc00009fee8, 0x1, 0x1})
+github.com/hashibuto/oof.Tracef({0x52e6b9, 0x1b}, {0xc00009fee8, 0x1, 0x1})
         /home/me/oof/oof.go:67 +0xb8
 github.com/hashibuto/oof.ApplicationLevelCaller1()
         /home/me/oof/oof_test.go:36 +0x99
-github.com/hashibuto/oof.TestWrapf(0xc000007ba0)
+github.com/hashibuto/oof.TestTracef(0xc000007ba0)
         /home/me/oof/oof_test.go:57 +0x25
 testing.tRunner(0xc000007ba0, 0x534b20)
         /usr/local/go/src/testing/testing.go:1446 +0x10b

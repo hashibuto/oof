@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"runtime/debug"
-	"strings"
 )
 
 type OofError struct {
@@ -24,8 +23,8 @@ func (e *OofError) Is(target error) bool {
 	return ok
 }
 
-// Wrap wraps the error in an OofError and captures the stack, along with the original error
-func Wrap(err error) error {
+// Trace wraps the error in an OofError and captures the stack, along with the original error
+func Trace(err error) error {
 	switch {
 	case errors.Is(err, OofErrorInstance):
 		return fmt.Errorf("%w", err)
@@ -38,26 +37,24 @@ func Wrap(err error) error {
 	}
 }
 
-// Wrapf wraps the error in an OofError and captures the stack, along with the original error and provides annotation
-func Wrapf(fmtString string, args ...any) error {
+// Tracef wraps the error in an OofError and captures the stack, along with the original error and provides annotation
+func Tracef(fmtString string, args ...any) error {
+	wrap := true
 	var err error
 	errIdx := 0
 	for i, arg := range args {
 		switch t := arg.(type) {
 		case error:
 			if err != nil {
-				err = fmt.Errorf("Wrapf: Can only wrap a single error: %w", err)
+				err = fmt.Errorf("Tracef: Can only wrap a single error: %w", err)
 			}
 			errIdx = i
 			err = t
 		}
 	}
 	if err == nil {
-		err = fmt.Errorf("Wrapf: No error provided in arguments")
-	}
-
-	if !strings.Contains(fmtString, "%w") {
-		err = fmt.Errorf("Wrapf: No wrapping format specifier provided in format string: %w", err)
+		err = fmt.Errorf(fmtString, args...)
+		wrap = false
 	}
 
 	switch {
@@ -69,6 +66,10 @@ func Wrapf(fmtString string, args ...any) error {
 	oofError := &OofError{
 		OrigError: err,
 		stack:     debug.Stack(),
+	}
+
+	if !wrap {
+		return oofError
 	}
 
 	newArgs := make([]any, len(args))
