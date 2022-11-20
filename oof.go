@@ -23,8 +23,18 @@ func (e *OofError) Is(target error) bool {
 	return ok
 }
 
+// Unwrap will recursively unwrap the error, returning the original error
+func (e *OofError) Unwrap() error {
+	return e.OrigError
+}
+
 // Trace wraps the error in an OofError and captures the stack, along with the original error
+// If the supplied error is nil, Trace will return nil
 func Trace(err error) error {
+	if err == nil {
+		return nil
+	}
+
 	switch {
 	case errors.Is(err, OofErrorInstance):
 		return fmt.Errorf("%w", err)
@@ -38,6 +48,7 @@ func Trace(err error) error {
 }
 
 // Tracef wraps the error in an OofError and captures the stack, along with the original error and provides annotation
+// If the supplied error is nil, Tracef will return nil
 func Tracef(fmtString string, args ...any) error {
 	wrap := true
 	var err error
@@ -53,8 +64,7 @@ func Tracef(fmtString string, args ...any) error {
 		}
 	}
 	if err == nil {
-		err = fmt.Errorf(fmtString, args...)
-		wrap = false
+		return nil
 	}
 
 	switch {
@@ -81,15 +91,4 @@ func Tracef(fmtString string, args ...any) error {
 		}
 	}
 	return fmt.Errorf(fmtString, newArgs...)
-}
-
-// GetOrigError returns the original error under an OofError (if err is not an OofError, err will be returned)
-func GetOrigError(err error) error {
-	var target *OofError
-	result := errors.As(err, &target)
-	if !result {
-		return err
-	}
-
-	return target.OrigError
 }

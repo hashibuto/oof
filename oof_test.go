@@ -2,16 +2,19 @@ package oof
 
 import (
 	"errors"
-	"fmt"
 	"testing"
 )
 
-var SpecialError = errors.New("SpecialError")
+type CustomError struct{}
+
+func (ce *CustomError) Error() string {
+	return "It's a custom error"
+}
 
 func LibCodeNested() error {
 	x := 1
 	x += 2
-	return fmt.Errorf("Special error occurred: %w", SpecialError)
+	return &CustomError{}
 }
 
 func ApplicationLevelCaller() error {
@@ -26,7 +29,7 @@ func ApplicationLevelCaller() error {
 func LibCodeNested1() error {
 	x := 1
 	x += 2
-	return fmt.Errorf("Special error occurred: %w", SpecialError)
+	return &CustomError{}
 }
 
 func ApplicationLevelCaller1() error {
@@ -45,9 +48,8 @@ func TestTrace(t *testing.T) {
 		return
 	}
 
-	origErr := GetOrigError(err)
-	if !errors.Is(origErr, SpecialError) {
-		t.Errorf("Expected special error")
+	if !errors.Is(err, &CustomError{}) {
+		t.Errorf("Expected custom error")
 		return
 	}
 }
@@ -59,9 +61,8 @@ func TestTracef(t *testing.T) {
 		return
 	}
 
-	origErr := GetOrigError(err)
-	if !errors.Is(origErr, SpecialError) {
-		t.Errorf("Expected special error")
+	if !errors.Is(err, &CustomError{}) {
+		t.Errorf("Expected custom error")
 		return
 	}
 }

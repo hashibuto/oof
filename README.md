@@ -1,6 +1,8 @@
 # oof
 Errors with stack traces for golang
 
+[Go docs](https://github.com/hashibuto/oof/blob/master/docs/doc.md)
+
 ## Usage
 
 ```
@@ -22,12 +24,6 @@ err := method(xyz)
 if err != nil {
     return oof.Tracef("This is my error: %w", err)
 }
-```
-
-Get the original error (safe to call on any error interface) - it will return the supplied error if `err` is not an `OofError` type.
-```
-err := method(xyz)
-origErr := oof.GetOrigError(err)
 ```
 
 ## Example output
