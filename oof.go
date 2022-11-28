@@ -64,7 +64,8 @@ func Tracef(fmtString string, args ...any) error {
 		}
 	}
 	if err == nil {
-		return nil
+		err = fmt.Errorf(fmtString, args...)
+		wrap = false
 	}
 
 	switch {
