@@ -9,6 +9,7 @@ import "github.com/hashibuto/oof"
 ## Index
 
 - [Variables](<#variables>)
+- [func GetTotalOofs() uint64](<#func-gettotaloofs>)
 - [func Trace(err error) error](<#func-trace>)
 - [func Tracef(fmtString string, args ...any) error](<#func-tracef>)
 - [type OofError](<#type-ooferror>)
@@ -23,7 +24,15 @@ import "github.com/hashibuto/oof"
 var OofErrorInstance = &OofError{}
 ```
 
-## func [Trace](<https://github.com/hashibuto/oof/blob/master/oof.go#L33>)
+## func [GetTotalOofs](<https://github.com/hashibuto/oof/blob/master/oof.go#L20>)
+
+```go
+func GetTotalOofs() uint64
+```
+
+GetTotalOofs returns the total number of times oof.Trace has been called
+
+## func [Trace](<https://github.com/hashibuto/oof/blob/master/oof.go#L41>)
 
 ```go
 func Trace(err error) error
@@ -31,7 +40,7 @@ func Trace(err error) error
 
 Trace wraps the error in an OofError and captures the stack, along with the original error If the supplied error is nil, Trace will return nil
 
-## func [Tracef](<https://github.com/hashibuto/oof/blob/master/oof.go#L52>)
+## func [Tracef](<https://github.com/hashibuto/oof/blob/master/oof.go#L62>)
 
 ```go
 func Tracef(fmtString string, args ...any) error
@@ -39,7 +48,7 @@ func Tracef(fmtString string, args ...any) error
 
 Tracef wraps the error in an OofError and captures the stack, along with the original error and provides annotation If the supplied error is nil, Tracef will return nil
 
-## type [OofError](<https://github.com/hashibuto/oof/blob/master/oof.go#L9-L12>)
+## type [OofError](<https://github.com/hashibuto/oof/blob/master/oof.go#L10-L13>)
 
 ```go
 type OofError struct {
@@ -48,7 +57,7 @@ type OofError struct {
 }
 ```
 
-### func \(\*OofError\) [Error](<https://github.com/hashibuto/oof/blob/master/oof.go#L17>)
+### func \(\*OofError\) [Error](<https://github.com/hashibuto/oof/blob/master/oof.go#L25>)
 
 ```go
 func (e *OofError) Error() string
@@ -56,13 +65,13 @@ func (e *OofError) Error() string
 
 Error returns a string representation of the error
 
-### func \(\*OofError\) [Is](<https://github.com/hashibuto/oof/blob/master/oof.go#L21>)
+### func \(\*OofError\) [Is](<https://github.com/hashibuto/oof/blob/master/oof.go#L29>)
 
 ```go
 func (e *OofError) Is(target error) bool
 ```
 
-### func \(\*OofError\) [Unwrap](<https://github.com/hashibuto/oof/blob/master/oof.go#L27>)
+### func \(\*OofError\) [Unwrap](<https://github.com/hashibuto/oof/blob/master/oof.go#L35>)
 
 ```go
 func (e *OofError) Unwrap() error
