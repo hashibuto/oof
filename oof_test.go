@@ -3,6 +3,7 @@ package oof
 import (
 	"errors"
 	"testing"
+	"time"
 )
 
 type CustomError struct{}
@@ -63,6 +64,53 @@ func TestTracef(t *testing.T) {
 
 	if !errors.Is(err, &CustomError{}) {
 		t.Errorf("Expected custom error")
+		return
+	}
+}
+
+func TestTotalOofs(t *testing.T) {
+	totalOofs.Store(0)
+	loops := uint64(100)
+	err := errors.New("Something")
+	for i := uint64(0); i < loops; i++ {
+		go func() {
+			Trace(err)
+		}()
+	}
+	wt := time.Now().Add(time.Second * 5)
+	for GetTotalOofs() < loops || time.Until(wt) <= time.Duration(0) {
+		time.Sleep(time.Millisecond)
+	}
+	if GetTotalOofs() != loops {
+		t.Error("Wrong number of oofs")
+		return
+	}
+	localOof := Trace(err)
+	for i := uint64(0); i < loops; i++ {
+		go func() {
+			Trace(localOof)
+		}()
+	}
+	wt = time.Now().Add(time.Second * 5)
+	for GetTotalOofs() < loops+1 || time.Until(wt) <= time.Duration(0) {
+		time.Sleep(time.Millisecond)
+	}
+	if GetTotalOofs() != loops+1 {
+		t.Error("Wrong number of oofs")
+		return
+	}
+	for i := uint64(0); i < loops; i++ {
+		q := i
+		go func() {
+			Tracef("Something %d", q)
+		}()
+	}
+	wt = time.Now().Add(time.Second * 5)
+	for GetTotalOofs() < (loops*2)+1 || time.Until(wt) <= time.Duration(0) {
+		time.Sleep(time.Millisecond)
+	}
+	if GetTotalOofs() != (loops*2)+1 {
+		t.Error("Wrong number of oofs")
 		return
 	}
 }
