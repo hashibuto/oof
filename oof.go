@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"runtime/debug"
+	"sync/atomic"
 )
 
 type OofError struct {
@@ -11,7 +12,14 @@ type OofError struct {
 	stack     []byte
 }
 
+var totalOofs = atomic.Uint64{}
+
 var OofErrorInstance = &OofError{}
+
+// GetTotalOofs returns the total number of times oof.Trace has been called
+func GetTotalOofs() uint64 {
+	return totalOofs.Load()
+}
 
 // Error returns a string representation of the error
 func (e *OofError) Error() string {
@@ -40,6 +48,8 @@ func Trace(err error) error {
 		return fmt.Errorf("%w", err)
 	}
 
+	// Add to total oofs
+	totalOofs.Add(1)
 	// Create a stack trace and attach it
 	return &OofError{
 		OrigError: err,
@@ -72,7 +82,8 @@ func Tracef(fmtString string, args ...any) error {
 	case errors.Is(err, OofErrorInstance):
 		return fmt.Errorf(fmtString, args...)
 	}
-
+	// Add to total oofs
+	totalOofs.Add(1)
 	// Create a stack trace and attach it
 	oofError := &OofError{
 		OrigError: err,
