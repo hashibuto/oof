@@ -10,11 +10,13 @@ import "github.com/hashibuto/oof"
 
 - [Variables](<#variables>)
 - [func GetTotalOofs() uint64](<#func-gettotaloofs>)
+- [func StripTrace(err error) error](<#func-striptrace>)
 - [func Trace(err error) error](<#func-trace>)
 - [func Tracef(fmtString string, args ...any) error](<#func-tracef>)
 - [type OofError](<#type-ooferror>)
   - [func (e *OofError) Error() string](<#func-ooferror-error>)
   - [func (e *OofError) Is(target error) bool](<#func-ooferror-is>)
+  - [func (e *OofError) StripTrace()](<#func-ooferror-striptrace>)
   - [func (e *OofError) Unwrap() error](<#func-ooferror-unwrap>)
 
 
@@ -32,7 +34,15 @@ func GetTotalOofs() uint64
 
 GetTotalOofs returns the total number of times oof.Trace has been called
 
-## func [Trace](<https://github.com/hashibuto/oof/blob/master/oof.go#L41>)
+## func [StripTrace](<https://github.com/hashibuto/oof/blob/master/oof.go#L117>)
+
+```go
+func StripTrace(err error) error
+```
+
+StripTrace strips the stack trace from an error
+
+## func [Trace](<https://github.com/hashibuto/oof/blob/master/oof.go#L49>)
 
 ```go
 func Trace(err error) error
@@ -40,7 +50,7 @@ func Trace(err error) error
 
 Trace wraps the error in an OofError and captures the stack, along with the original error If the supplied error is nil, Trace will return nil
 
-## func [Tracef](<https://github.com/hashibuto/oof/blob/master/oof.go#L62>)
+## func [Tracef](<https://github.com/hashibuto/oof/blob/master/oof.go#L70>)
 
 ```go
 func Tracef(fmtString string, args ...any) error
@@ -65,13 +75,21 @@ func (e *OofError) Error() string
 
 Error returns a string representation of the error
 
-### func \(\*OofError\) [Is](<https://github.com/hashibuto/oof/blob/master/oof.go#L29>)
+### func \(\*OofError\) [Is](<https://github.com/hashibuto/oof/blob/master/oof.go#L32>)
 
 ```go
 func (e *OofError) Is(target error) bool
 ```
 
-### func \(\*OofError\) [Unwrap](<https://github.com/hashibuto/oof/blob/master/oof.go#L35>)
+### func \(\*OofError\) [StripTrace](<https://github.com/hashibuto/oof/blob/master/oof.go#L43>)
+
+```go
+func (e *OofError) StripTrace()
+```
+
+StripTrace strips the stack trace from an error
+
+### func \(\*OofError\) [Unwrap](<https://github.com/hashibuto/oof/blob/master/oof.go#L38>)
 
 ```go
 func (e *OofError) Unwrap() error
