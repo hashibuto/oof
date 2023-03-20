@@ -2,6 +2,7 @@ package oof
 
 import (
 	"errors"
+	"fmt"
 	"testing"
 	"time"
 )
@@ -112,5 +113,13 @@ func TestTotalOofs(t *testing.T) {
 	if GetTotalOofs() != (loops*2)+1 {
 		t.Error("Wrong number of oofs")
 		return
+	}
+}
+
+func TestStripTrace(t *testing.T) {
+	err := Trace(fmt.Errorf("An error happened"))
+	err = StripTrace(err)
+	if fmt.Sprintf("%s", err) != "An error happened" {
+		t.Errorf("Trace was not properly stripped")
 	}
 }
