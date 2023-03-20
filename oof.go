@@ -23,6 +23,9 @@ func GetTotalOofs() uint64 {
 
 // Error returns a string representation of the error
 func (e *OofError) Error() string {
+	if len(e.stack) == 0 {
+		return fmt.Sprintf("%v", e.OrigError)
+	}
 	return fmt.Sprintf("%v\n%s", e.OrigError, string(e.stack))
 }
 
@@ -34,6 +37,11 @@ func (e *OofError) Is(target error) bool {
 // Unwrap will recursively unwrap the error, returning the original error
 func (e *OofError) Unwrap() error {
 	return e.OrigError
+}
+
+// StripTrace strips the stack trace from an error
+func (e *OofError) StripTrace() {
+	e.stack = []byte{}
 }
 
 // Trace wraps the error in an OofError and captures the stack, along with the original error
@@ -103,4 +111,15 @@ func Tracef(fmtString string, args ...any) error {
 		}
 	}
 	return fmt.Errorf(fmtString, newArgs...)
+}
+
+// StripTrace strips the stack trace from an error
+func StripTrace(err error) error {
+	var e *OofError
+	if errors.As(err, &e) {
+		e.StripTrace()
+		return e
+	}
+
+	return err
 }
