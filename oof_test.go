@@ -123,3 +123,13 @@ func TestStripTrace(t *testing.T) {
 		t.Errorf("Trace was not properly stripped")
 	}
 }
+
+func TestNonFatal(t *testing.T) {
+	var err error
+	Fatal(err)
+}
+
+func TestNonFatalf(t *testing.T) {
+	var err error
+	Fatalf("An error occurred\n%v", err)
+}
