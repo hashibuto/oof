@@ -9,24 +9,47 @@ import "github.com/hashibuto/oof"
 ## Index
 
 - [Variables](<#variables>)
-- [func GetTotalOofs() uint64](<#func-gettotaloofs>)
-- [func StripTrace(err error) error](<#func-striptrace>)
-- [func Trace(err error) error](<#func-trace>)
-- [func Tracef(fmtString string, args ...any) error](<#func-tracef>)
-- [type OofError](<#type-ooferror>)
-  - [func (e *OofError) Error() string](<#func-ooferror-error>)
-  - [func (e *OofError) Is(target error) bool](<#func-ooferror-is>)
-  - [func (e *OofError) StripTrace()](<#func-ooferror-striptrace>)
-  - [func (e *OofError) Unwrap() error](<#func-ooferror-unwrap>)
+- [func Fatal\(err error\)](<#Fatal>)
+- [func Fatalf\(fmtString string, args ...any\)](<#Fatalf>)
+- [func GetTotalOofs\(\) uint64](<#GetTotalOofs>)
+- [func StripTrace\(err error\) error](<#StripTrace>)
+- [func Trace\(err error\) error](<#Trace>)
+- [func Tracef\(fmtString string, args ...any\) error](<#Tracef>)
+- [type OofError](<#OofError>)
+  - [func \(e \*OofError\) Error\(\) string](<#OofError.Error>)
+  - [func \(e \*OofError\) Is\(target error\) bool](<#OofError.Is>)
+  - [func \(e \*OofError\) StripTrace\(\)](<#OofError.StripTrace>)
+  - [func \(e \*OofError\) Unwrap\(\) error](<#OofError.Unwrap>)
 
 
 ## Variables
+
+<a name="OofErrorInstance"></a>
 
 ```go
 var OofErrorInstance = &OofError{}
 ```
 
-## func [GetTotalOofs](<https://github.com/hashibuto/oof/blob/master/oof.go#L20>)
+<a name="Fatal"></a>
+## func [Fatal](<https://github.com/hashibuto/oof/blob/master/oof.go#L118>)
+
+```go
+func Fatal(err error)
+```
+
+Fatal will log a fatal error message and cause the process to exit if and only if the provided err is non\-nil. A full strack trace will be included.
+
+<a name="Fatalf"></a>
+## func [Fatalf](<https://github.com/hashibuto/oof/blob/master/oof.go#L127>)
+
+```go
+func Fatalf(fmtString string, args ...any)
+```
+
+Fatalf will log a fatal error message and cause the process to exit if and only if the provided err is non\-nil. Additionally, a user specified message will be logged. A full strack trace will be included.
+
+<a name="GetTotalOofs"></a>
+## func [GetTotalOofs](<https://github.com/hashibuto/oof/blob/master/oof.go#L21>)
 
 ```go
 func GetTotalOofs() uint64
@@ -34,7 +57,8 @@ func GetTotalOofs() uint64
 
 GetTotalOofs returns the total number of times oof.Trace has been called
 
-## func [StripTrace](<https://github.com/hashibuto/oof/blob/master/oof.go#L117>)
+<a name="StripTrace"></a>
+## func [StripTrace](<https://github.com/hashibuto/oof/blob/master/oof.go#L146>)
 
 ```go
 func StripTrace(err error) error
@@ -42,7 +66,8 @@ func StripTrace(err error) error
 
 StripTrace strips the stack trace from an error
 
-## func [Trace](<https://github.com/hashibuto/oof/blob/master/oof.go#L49>)
+<a name="Trace"></a>
+## func [Trace](<https://github.com/hashibuto/oof/blob/master/oof.go#L50>)
 
 ```go
 func Trace(err error) error
@@ -50,7 +75,8 @@ func Trace(err error) error
 
 Trace wraps the error in an OofError and captures the stack, along with the original error If the supplied error is nil, Trace will return nil
 
-## func [Tracef](<https://github.com/hashibuto/oof/blob/master/oof.go#L70>)
+<a name="Tracef"></a>
+## func [Tracef](<https://github.com/hashibuto/oof/blob/master/oof.go#L71>)
 
 ```go
 func Tracef(fmtString string, args ...any) error
@@ -58,7 +84,10 @@ func Tracef(fmtString string, args ...any) error
 
 Tracef wraps the error in an OofError and captures the stack, along with the original error and provides annotation If the supplied error is nil, Tracef will return nil
 
-## type [OofError](<https://github.com/hashibuto/oof/blob/master/oof.go#L10-L13>)
+<a name="OofError"></a>
+## type [OofError](<https://github.com/hashibuto/oof/blob/master/oof.go#L11-L14>)
+
+
 
 ```go
 type OofError struct {
@@ -67,7 +96,8 @@ type OofError struct {
 }
 ```
 
-### func \(\*OofError\) [Error](<https://github.com/hashibuto/oof/blob/master/oof.go#L25>)
+<a name="OofError.Error"></a>
+### func \(\*OofError\) [Error](<https://github.com/hashibuto/oof/blob/master/oof.go#L26>)
 
 ```go
 func (e *OofError) Error() string
@@ -75,13 +105,17 @@ func (e *OofError) Error() string
 
 Error returns a string representation of the error
 
-### func \(\*OofError\) [Is](<https://github.com/hashibuto/oof/blob/master/oof.go#L32>)
+<a name="OofError.Is"></a>
+### func \(\*OofError\) [Is](<https://github.com/hashibuto/oof/blob/master/oof.go#L33>)
 
 ```go
 func (e *OofError) Is(target error) bool
 ```
 
-### func \(\*OofError\) [StripTrace](<https://github.com/hashibuto/oof/blob/master/oof.go#L43>)
+
+
+<a name="OofError.StripTrace"></a>
+### func \(\*OofError\) [StripTrace](<https://github.com/hashibuto/oof/blob/master/oof.go#L44>)
 
 ```go
 func (e *OofError) StripTrace()
@@ -89,14 +123,13 @@ func (e *OofError) StripTrace()
 
 StripTrace strips the stack trace from an error
 
-### func \(\*OofError\) [Unwrap](<https://github.com/hashibuto/oof/blob/master/oof.go#L38>)
+<a name="OofError.Unwrap"></a>
+### func \(\*OofError\) [Unwrap](<https://github.com/hashibuto/oof/blob/master/oof.go#L39>)
 
 ```go
 func (e *OofError) Unwrap() error
 ```
 
 Unwrap will recursively unwrap the error, returning the original error
-
-
 
 Generated by [gomarkdoc](<https://github.com/princjef/gomarkdoc>)
