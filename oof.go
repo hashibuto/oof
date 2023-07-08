@@ -3,6 +3,7 @@ package oof
 import (
 	"errors"
 	"fmt"
+	"log"
 	"runtime/debug"
 	"sync/atomic"
 )
@@ -111,6 +112,34 @@ func Tracef(fmtString string, args ...any) error {
 		}
 	}
 	return fmt.Errorf(fmtString, newArgs...)
+}
+
+// Fatal will log a fatal error message and cause the process to exit if and only if the provided err is non-nil.  A full strack trace will be included.
+func Fatal(err error) {
+	if err == nil {
+		return
+	}
+
+	log.Fatalf("%s", Trace(err).Error())
+}
+
+// Fatalf will log a fatal error message and cause the process to exit if and only if the provided err is non-nil.  Additionally, a user specified message will be logged.  A full strack trace will be included.
+func Fatalf(fmtString string, args ...any) {
+	var err error
+	for _, arg := range args {
+		switch t := arg.(type) {
+		case error:
+			if err != nil {
+				err = fmt.Errorf("Tracef: Can only wrap a single error: %w", err)
+			}
+			err = t
+		}
+	}
+	if err == nil {
+		return
+	}
+
+	log.Fatalf("%s", Tracef(fmtString, args...).Error())
 }
 
 // StripTrace strips the stack trace from an error
